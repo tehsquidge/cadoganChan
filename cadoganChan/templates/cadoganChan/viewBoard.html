@@ -1,0 +1,104 @@
+{% extends 'cadoganChan/index.html' %}
+{% load functions %}
+
+{%block title%}CadoganChan - {{current_board.name}} {%endblock%}
+{% block h1 %}<h1>{{current_board.name}} - /{{current_board.id}}/</h1>{% endblock %}
+{% block postForm %}
+<form method="post" enctype="multipart/form-data">
+<h2>Add New Thead</h2>
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit">
+</form>
+<a id="reply"></a>
+{% endblock %}
+
+{% block content %}
+
+{% for thread in threads.object_list %}
+	<div id="post_{{thread.post_set.all.0.id}}" class="post OP">
+		<div class="postBar">
+		<span class="postID">
+		#{{ thread.post_set.all.0.id}}
+		</span>
+		<span class="subject">{{thread.post_set.all.0.subject}}</span>
+		<span class="name">
+		{% if thread.post_set.all.0.email|length > 0 %}
+			<a href="mailto:{{thread.post_set.all.0.email}}">{{thread.post_set.all.0.name|trip}}</a>
+		{% else %}
+			{{thread.post_set.all.0.name|trip}}
+		{% endif %}
+		</span>
+		<span class="date">
+		{{ thread.post_set.all.0.datetime|humanize_timesince}} ago
+		</span>
+		<span class="links right">
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}">[View Thread]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#post_{{thread.post_set.all.0.id}}">[View Post]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#reply_{{thread.post_set.all.0.id}}">[Reply]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#quote_{{thread.post_set.all.0.id}}">[Quote]</a>
+		</span>
+		</div>
+		<div class="postContent">
+			{% if thread.post_set.all.0.image %}
+			<a class="left thumbnail" target="_blank" href="{{MEDIA_URL}}{{thread.post_set.all.0.image}}"><img src="{% thumb thread.post_set.all.0.image 200 200 no %}" alt="{{thread.post_set.all.0.id}}"/></a>
+			{% endif %}
+			<div class="comment left">{{thread.post_set.all.0.comment|text_process|safe|linebreaks}}</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	{% for post in thread.post_set.all|dictsortreversed:"datetime"|slice:"5" reversed %}
+	{% if forloop.first%}
+	{% if thread.post_set.count > 5 %} showing 5 of {{thread.post_set.count}} posts in thread... <a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}">[View Thread]</a>?{% endif %}
+	{% else %}
+	<div id="post_{{post.id}}" class="post">
+		<div class="postBar">
+		<span class="postID">
+		#{{ post.id}}
+		</span>
+		<span class="subject">{{post.subject}}</span>
+		<span class="name">
+		{% if post.email|length > 0 %}
+			<a href="mailto:{{post.email}}">{{post.name|trip}}</a>
+		{% else %}
+			{{post.name|trip}}
+		{% endif %}
+		</span>
+		<span class="date">
+		{{ post.datetime|humanize_timesince}} ago
+		</span>
+		<span class="links right">
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}">[View Thread]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#post_{{post.id}}">[View Post]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#reply_{{post.id}}">[Reply]</a>
+			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}#quote_{{post.id}}">[Quote]</a>
+		</span>
+		</div>
+		<div class="postContent">
+			{% if post.image %}
+			<a class="left thumbnail" target="_blank" href="{{MEDIA_URL}}{{post.image}}"><img src="{% thumb post.image 200 200 no %}" alt="{{post.id}}"/></a>
+			{% endif %}
+			<div class="comment left">{{post.comment|text_process|safe|linebreaks}}</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+	{% if forloop.last %}{% else %}<div class="threadSplit"></div>{% endif %}
+{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if threads.has_previous %}
+            <a href="?page={{ threads.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ threads.number }} of {{ threads.paginator.num_pages }}.
+        </span>
+
+        {% if threads.has_next %}
+            <a href="?page={{ threads.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'cadoganChan/index.html' %}
+{% load functions %}
+
+{%block title%}CadoganChan - {{current_board.name}} - {{thread.id}} {%endblock%}
+{% block h1 %}
+<h1>{{current_board.name}} - /{{current_board.id}}/ - Thread No. {{thread.id}}</h1>
+{% endblock %}
+{% block postForm %}
+<h2>Add Reply</h2>
+<form method="post" enctype="multipart/form-data">
+    {{ form.as_table }}
+    {% csrf_token %}
+    <input type="submit">
+</form>
+<a id="reply"></a>
+{% endblock %}
+{% block content %}
+{% if success_message %}
+	{{success_message|safe}}
+{% endif %}
+	{% for post in thread.post_set.all %}
+	<div id="post_{{post.id}}" class="post {% if forloop.first %}OP{% endif %}">
+		<div class="postBar">
+		<span class="postID">
+			#{{ post.id}}
+		</span>
+		<span class="subject">{{post.subject}}</span>
+		<span class="name">
+		{% if post.email|length > 0 %}
+			<a href="mailto:{{post.email}}">{{post.name|trip}}</a>
+		{% else %}
+			{{post.name|trip}}
+		{% endif %}
+		</span>
+		<span class="date">
+		{{ post.datetime}} ago
+		</span>
+		<span class="links right">
+			<a href="javascript:reply_to({{post.id}})">[Reply]</a>
+			<a href="javascript:quote({{post.id}})">[Quote]</a>
+		</span>
+		</div>
+		<div class="postContent">
+			{% if post.image %}
+			<a class="left thumbnail" target="_blank" href="{{MEDIA_URL}}{{post.image}}"><img src="{% thumb post.image 200 200 no %}" alt="{{post.id}}"/></a>
+			{% endif %}
+			<div class="comment left">{{post.comment|text_process|safe|linebreaks}}</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	{% endfor %}
+{% endblock %}

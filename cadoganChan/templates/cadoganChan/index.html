@@ -1,0 +1,116 @@
+{% load functions %}
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>{%block title%}CadoganChan{%endblock%}</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- CSS concatenated and minified via ant build script-->
+  <link rel="stylesheet" href="{{MEDIA_URL}}cadoganChan/css/style.css">
+  <!-- end CSS-->
+
+  <script src="{{MEDIA_URL}}cadoganChan/js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+<body>
+<div id="container">
+<ul id="boardList">
+	<li><a href="{% url "cadoganChan.views.index" %}">[Home]</a></li>
+{% for board in boards %}
+	<li><a href="{% url "cadoganChan.views.board" board=board.id %}">[{{ board }}]</a></li>
+{% endfor %}
+</ul>
+<div id="banner"></div>
+{% block h1 %} <h1>Home</h1> {% endblock %}
+<div id="formAndWelcome" class="left">{% block postForm %}
+<h2>Welcome!</h2>
+<p>Cadogan Chan is a free to use, no registration required, English language imageboard based on the Japanese imageboard Futaba Channel.</p>
+<p>This imageboard is based primarily upon the posting of pictures and their discussion.</p>
+<p>It's currently version 0.3.</p>
+<p>Current Boards Available are:</p>
+<uL>
+	<li>testing</li>
+</uL>
+<p>Currently Implemented Features:</p>
+<ul>
+	<li>Boards/Threads/Posts</li>
+	<li>Uploading Images</li>
+	<li>Sage</li>
+	<li>Noko</li>
+	<li>Tripcodes</li>
+	<li>Quoting Green Text with <strong>&gt;</strong></li>
+	<li>smart (cross-thread/board) referencing/replying with <strong>@</strong></li>
+	<li>Administration Via Djangos admin panel</li>
+</ul>
+<p>CadoganChan does not record the IP address of any of it's users though they are logged through apache. If privacy is a concern use a proxy (or tor) or don't post.</p>
+{% endblock %}</div>
+<div id="protips" class="right">
+<h2>Pro Tips:</h2>
+<ul>
+	<li>
+		Image Types you can upload:
+		<ul>
+			<li>JPG</li>
+			<li>PNG</li>
+			<li>GIF</li>
+		</ul>
+	</li>
+	<li>
+		When starting a new thread you <strong>*MUST*</strong> have an image. Nothing else is neccesary.
+	</li>
+	<li>
+		When replying to a thread you must have an image and/or comment. nothing else is neccesary.
+	</li>
+	<li>
+		If you do not put a name you will be anonymous.
+	</li>
+	<li>
+		Putting 'sage' in the email field will stop the thread you're posting in from being bumped.
+	</li>
+	<li>
+		Putting 'noko' in the email field will return you to your new post.
+	</li>
+	<li>
+		A tripcode is a way to identify a user without registering by adding a unique hash to the end of their name. To use a tripcode put name!passphrase into the name field.
+	</li>
+	<li>
+		@&lt;post_number&gt; will allow you to refer to and link to any post, anywhere on the site. e.g. @12 will link to post 12.
+	</li>
+</ul>
+</div>
+<div class="clearfix"></div>
+{% block content %}
+
+{% endblock %}
+<div id="footer">
+<p><img src="{{MEDIA_URL}}cadoganChan/images/cm068a.gif" alt="waka waka waka"> Designed and Built by Me. All content property of their poster.</p>
+</div>
+  </div> <!--! end of #container -->
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="{{MEDIA_URL}}cadoganChan/js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+
+
+  <!-- scripts concatenated and minified via ant build script-->
+  <script defer src="{{MEDIA_URL}}cadoganChan/js/plugins.js"></script>
+  <script defer src="{{MEDIA_URL}}cadoganChan/js/script.js"></script>
+  <!-- end scripts-->
+
+
+
+  <!--[if lt IE 7 ]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+  
+</body>
+</html>

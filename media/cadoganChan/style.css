@@ -1,0 +1,5 @@
+/* Forms first */
+
+form { width: 500px; margin: auto; }
+form label { vertical-align: top;display: block;}
+form ul.errorlist { float: right; }
