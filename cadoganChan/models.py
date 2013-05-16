@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now as utcnow
 import os
 import uuid
 
@@ -27,7 +28,7 @@ class Thread(models.Model):
 class Post(models.Model):
 	name = models.CharField(max_length=32,blank=True)
 	thread = models.ForeignKey(Thread)
-	datetime = models.DateTimeField(auto_now_add=True)
+	datetime = models.DateTimeField(default=utcnow)
 	email = models.CharField(max_length=32,blank=True) #this will be validated later... for sage and noko and shit
 	subject = models.CharField(max_length=32,blank=True)
 	comment = models.TextField(blank=True)

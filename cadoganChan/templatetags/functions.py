@@ -1,7 +1,6 @@
 import os
 from os import path
 
-import PIL
 from django import template
 from django.template import Library
 import re
@@ -9,8 +8,10 @@ import string
 from string import maketrans
 import crypt
 import sys
+
 from datetime import datetime
 from django.utils import timezone
+
 from cadoganChan.models import Board, Thread, Post
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
@@ -34,9 +35,13 @@ def get_thumb(imagefield, width, height):
     else:
         if not path.isdir(path.dirname(p)):
             os.mkdir(path.dirname(p), 0755)
-        img = PImage.open(imagefield.path)
-        img.thumbnail(size, PImage.ANTIALIAS)
-        img.save(p)
+        try:
+            img = PImage.open(imagefield.path)
+            img.thumbnail(size, PImage.ANTIALIAS)
+            img.save(p)
+        except IOError:
+            pass
+
 
     return urljoin(imagefield.url, 'thumbs/' + thumbname)
 
@@ -130,38 +135,6 @@ def trip(text):
 
 register.filter(trip)
 
-def humanize_timesince(start_time):
-	delta = datetime.now() - start_time.replace(tzinfo=None)
-
-	num_years = delta.days / 365
-	if (num_years > 0):
-		return "%d year%s" % (num_years, plural(num_years))
-
-	num_weeks = delta.days / 7
-	if (num_weeks > 0):
-		return "%d week%s" % (num_weeks, plural(num_weeks))
-
-	if (delta.days > 0):
-		return "%d day%s" % (delta.days, plural(delta.days))
-
-	num_hours = delta.seconds / 3600
-	if (num_hours > 0):
-		return "%d hour%s" % (num_hours, plural(num_hours))
-
-	num_minutes = delta.seconds / 60
-	if (num_minutes > 0):
-		return "%d minute%s" % (num_minutes, plural(num_minutes))
-
-	return "a few seconds"
- 
-register.filter(humanize_timesince)
-
-def plural(x):
-	if(x != 1):
-                plural = 's'
-        else:
-             	plural = ''
-	return plural
 
 def text_process(text):
 	regex = re.compile(">(?P<quote>.+)")

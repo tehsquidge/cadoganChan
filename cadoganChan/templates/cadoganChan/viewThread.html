@@ -1,6 +1,7 @@
 {% extends 'cadoganChan/index.html' %}
+{% load humanize %}
 {% load functions %}
-
+{% load tz %}
 {%block title%}CadoganChan - {{current_board.name}} - {{thread.id}} {%endblock%}
 {% block h1 %}
 <h1>{{current_board.name}} - /{{current_board.id}}/ - Thread No. {{thread.id}}</h1>
@@ -33,7 +34,7 @@
 		{% endif %}
 		</span>
 		<span class="date">
-		{{ post.datetime}} ago
+		{{ post.datetime|localtime}} | {{ post.datetime|naturaltime}}
 		</span>
 		<span class="links right">
 			<a href="javascript:reply_to({{post.id}})">[Reply]</a>

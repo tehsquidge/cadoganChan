@@ -1,4 +1,5 @@
 {% extends 'cadoganChan/index.html' %}
+{% load humanize %}
 {% load functions %}
 
 {%block title%}CadoganChan - {{current_board.name}} {%endblock%}
@@ -30,7 +31,7 @@
 		{% endif %}
 		</span>
 		<span class="date">
-		{{ thread.post_set.all.0.datetime|humanize_timesince}} ago
+		{{ thread.post_set.all.0.datetime|naturaltime}}
 		</span>
 		<span class="links right">
 			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}">[View Thread]</a>
@@ -65,7 +66,7 @@
 		{% endif %}
 		</span>
 		<span class="date">
-		{{ post.datetime|humanize_timesince}} ago
+		{{ post.datetime|naturaltime}}
 		</span>
 		<span class="links right">
 			<a href="{% url "cadoganChan.views.thread" board_id=current_board.id thread_id=thread.id %}">[View Thread]</a>
