@@ -60,7 +60,7 @@ def thread(request,board_id,thread_id):
     context['thread'] = get_object_or_404(Thread, id=thread_id)
     
     #if we are adding a new thread
-    if request.method == 'POST':
+    if request.method == 'POST' and (not context['thread'].locked):
 		request.POST.board_id = board_id
 		context['form'] = postForm(request.POST or None, request.FILES or None)
 		if(context['form'].is_valid()):
